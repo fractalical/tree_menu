@@ -1,17 +1,8 @@
 {% extends "app/base.html" %}
+{% load draw_menu %}
 
 {% block content %}
-<ul>
-    {% for item in menu_items %}
-        <li><a href="{{ item.url }}">{{ item.name }}</a>
-            {% if item.menuitem_set.exists %}
-                <ul>
-                    {% for sub_item in item.menuitem_set.all %}
-                        <li><a href="?{{ sub_item.url }}">{{ sub_item.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </li>
-    {% endfor %}
-</ul>
+<nav>
+  {% new_unordered_list menu_name %}
+</nav>
 {% endblock %}
