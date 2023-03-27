@@ -17,13 +17,11 @@ import debug_toolbar
 from django.contrib import admin
 from django.urls import path, include
 
-from app.views import index, index_named, my_view, my_view_named
+from app.views import my_view, my_view_named
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/', index),
-    path('index/<menu_name>', index_named),
-    path('menu/', my_view),
-    path('menu/<menu_name>', my_view_named),
+    path('menu/', my_view, name='index'),
+    path('menu/<level>/<menu_name>', my_view_named, name='menu'),
     path('__debug__/', include(debug_toolbar.urls)),
 ]

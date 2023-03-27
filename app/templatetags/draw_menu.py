@@ -12,26 +12,7 @@ register = template.Library()
 
 
 @register.simple_tag
-def draw_menu(menu_name):
-    print('DRAW menu_name', menu_name)
-    menu_level = MenuItem.objects.filter(name=menu_name).first()
-    menu_items = MenuItem.objects.filter(level=menu_level.level)
-    print('DRAW model', menu_items)
-    menu_html = "<ul>\n"
-    for item in menu_items:
-        menu_html += f"<li>\n<a href=?'{item.name}'>{item.name}</a>\n"
-        # if item.children.exists():
-        #     menu_html += "<ul>"
-        #     for child in item.children.all():
-        #         menu_html += f"<li><a href='{child.name}'>{child.name}</a></li>"
-        #     menu_html += "</ul>"
-        menu_html += "</li>\n"
-    menu_html += "</ul>\n"
-    return menu_html
-
-
-@register.simple_tag
-def new_unordered_list(value, autoescape=True):
+def draw_menu(value, autoescape=True):
     """
     Recursively take a self-nested list and return an HTML unordered list --
     WITHOUT opening and closing <ul> tags.
@@ -86,6 +67,7 @@ def new_unordered_list(value, autoescape=True):
     def list_formatter(item_list, tabs=1):
         indent = "\t" * tabs
         output = []
+        # if isinstance(item_list, list):
         for item, children in walk_items(item_list):
             sublist = ""
             if children:
@@ -95,7 +77,14 @@ def new_unordered_list(value, autoescape=True):
                     indent,
                     indent,
                 )
-            output.append("%s<li><a href='%s'>%s%s</a></li>" % (indent, escaper(item), escaper(item), sublist))
+            output.append("%s<li><a href='%s'>%s%s</a></li>" % (
+                indent, reverse(
+                    'menu', kwargs={
+                        'level': escaper(item['level']),
+                        'menu_name': escaper(item['slug'])
+                    }
+                ), escaper(item['name']), sublist
+            ))
         return "\n".join(output)
 
     return mark_safe(list_formatter(value))
