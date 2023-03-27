@@ -95,7 +95,7 @@ def new_unordered_list(value, autoescape=True):
                     indent,
                     indent,
                 )
-            output.append("%s<li>%s%s</li>" % (indent, escaper(item), sublist))
+            output.append("%s<li><a href='%s'>%s%s</a></li>" % (indent, escaper(item), escaper(item), sublist))
         return "\n".join(output)
 
     return mark_safe(list_formatter(value))
